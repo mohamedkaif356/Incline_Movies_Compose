@@ -69,6 +69,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
 
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -81,6 +82,7 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.6.1")
     implementation ("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
