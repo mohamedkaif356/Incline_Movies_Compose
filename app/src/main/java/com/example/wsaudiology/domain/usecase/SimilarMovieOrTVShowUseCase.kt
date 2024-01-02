@@ -7,11 +7,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
-class SimilarMovieUseCase @Inject constructor(
+class SimilarMovieOrTVShowUseCase @Inject constructor(
     private val moviesAndTVShowsRepositoryInterface: MoviesAndTVShowsRepositoryInterface
 ) {
-    operator fun invoke(movieId: String): Flow<Resource<MoviesAndTVShowsResponse>> {
-        return moviesAndTVShowsRepositoryInterface.similarMovie(movieId)
+    operator fun invoke(
+        movieOrTVShow: String,
+        movieOrSeriesId: String
+    ): Flow<Resource<MoviesAndTVShowsResponse>> {
+        return moviesAndTVShowsRepositoryInterface.similarMovieOrTVShow(
+            movieOrTVShow,
+            movieOrSeriesId
+        )
             .catch { throwable ->
                 emit(Resource.Error(throwable))
             }

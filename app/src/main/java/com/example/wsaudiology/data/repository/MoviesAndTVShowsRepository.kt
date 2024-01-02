@@ -13,9 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class MoviesAndTVShowsRepository @Inject constructor(
     private val moviesAndTVShowAPI: MoviesAndTVShowAPI,
     private val moviesAndTVShowsDao: MoviesAndTVShowsDao
@@ -31,7 +29,7 @@ class MoviesAndTVShowsRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    override fun moviesAndTVShows() = networkBoundResource(
+    override fun moviesAndTVShows(isNetworkAvailable: Boolean) = networkBoundResource(
         query = {
             moviesAndTVShowsDao.getMoviesAndTVShows()
         },
@@ -42,7 +40,7 @@ class MoviesAndTVShowsRepository @Inject constructor(
             moviesAndTVShowsDao.insertMoviesAndTVShows(moviesAndTVShowsResult.results)
         },
         shouldFetch = {
-            true
+            isNetworkAvailable
         }
     )
 
@@ -64,15 +62,12 @@ class MoviesAndTVShowsRepository @Inject constructor(
         }
     }
 
-    override fun similarTVShow(seriesId: String): Flow<Resource<MoviesAndTVShowsResponse>> {
+    override fun similarMovieOrTVShow(
+        movieOrTVShow: String,
+        movieOrSeriesId: String
+    ): Flow<Resource<MoviesAndTVShowsResponse>> {
         return fetchData {
-            moviesAndTVShowAPI.similarTVShow(seriesId)
-        }
-    }
-
-    override fun similarMovie(movieId: String): Flow<Resource<MoviesAndTVShowsResponse>> {
-        return fetchData {
-            moviesAndTVShowAPI.similarMovie(movieId)
+            moviesAndTVShowAPI.similarMovieOrTVShow(movieOrTVShow, movieOrSeriesId)
         }
     }
 }

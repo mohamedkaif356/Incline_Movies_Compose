@@ -11,8 +11,8 @@ import javax.inject.Inject
 class MoviesAndTVShowsUseCase @Inject constructor(
     private val moviesAndTVShowsRepositoryInterface: MoviesAndTVShowsRepositoryInterface
 ) {
-    operator fun invoke(): Flow<Resource<List<MoviesAndTVShowsResult>>> {
-        return moviesAndTVShowsRepositoryInterface.moviesAndTVShows()
+    operator fun invoke(isNetworkAvailable: Boolean): Flow<Resource<List<MoviesAndTVShowsResult>>> {
+        return moviesAndTVShowsRepositoryInterface.moviesAndTVShows(isNetworkAvailable)
             .catch { throwable ->
                 emit(Resource.Error(throwable))
             }

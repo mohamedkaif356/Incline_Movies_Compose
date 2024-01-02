@@ -3,8 +3,7 @@ package com.example.wsaudiology.presentation.di
 import com.example.wsaudiology.domain.repository.MoviesAndTVShowsRepositoryInterface
 import com.example.wsaudiology.domain.usecase.MovieDetailsUseCase
 import com.example.wsaudiology.domain.usecase.MoviesAndTVShowsUseCase
-import com.example.wsaudiology.domain.usecase.SimilarMovieUseCase
-import com.example.wsaudiology.domain.usecase.SimilarTVShowUseCase
+import com.example.wsaudiology.domain.usecase.SimilarMovieOrTVShowUseCase
 import com.example.wsaudiology.domain.usecase.TVShowDetailsUseCase
 import dagger.Module
 import dagger.Provides
@@ -41,18 +40,10 @@ object UseCaseModule {
 
     @ViewModelScoped
     @Provides
-    fun provideSimilarMovieUseCase(
+    fun provideSimilarMovieOrTVShowUseCase(
         repository: MoviesAndTVShowsRepositoryInterface
-    ): SimilarMovieUseCase {
-        return SimilarMovieUseCase(repository)
-    }
-
-    @ViewModelScoped
-    @Provides
-    fun provideSimilarTVShowUseCase(
-        repository: MoviesAndTVShowsRepositoryInterface
-    ): SimilarTVShowUseCase {
-        return SimilarTVShowUseCase(repository)
+    ): SimilarMovieOrTVShowUseCase {
+        return SimilarMovieOrTVShowUseCase(repository)
     }
 
 }

@@ -26,14 +26,10 @@ interface MoviesAndTVShowAPI {
         @Path("movie_id") movieId: String
     ) : MovieDetailsResponse
 
-    @GET("tv/{series_id}/similar")
-    suspend fun similarTVShow(
-        @Path("movie_id") seriesId: String
-    ) : MoviesAndTVShowsResponse
-
-    @GET("movie/{movie_id}/similar")
-    suspend fun similarMovie(
-        @Path("movie_id") movieId: String
+    @GET("{movie_or_tv_show}/{movie_or_tv_show_id}/similar")
+    suspend fun similarMovieOrTVShow(
+        @Path("movie_or_tv_show") seriesOrMovie: String,
+        @Path("movie_or_tv_show_id") seriesOrMovieId: String
     ) : MoviesAndTVShowsResponse
 
 }

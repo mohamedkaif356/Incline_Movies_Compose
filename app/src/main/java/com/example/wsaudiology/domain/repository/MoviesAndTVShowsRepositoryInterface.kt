@@ -9,16 +9,17 @@ import kotlinx.coroutines.flow.Flow
 
 interface MoviesAndTVShowsRepositoryInterface {
 
-    fun moviesAndTVShows() : Flow<Resource<List<MoviesAndTVShowsResult>>>
+    fun moviesAndTVShows(isNetworkAvailable: Boolean): Flow<Resource<List<MoviesAndTVShowsResult>>>
 
-    fun searchTVShows(tvShowName: String) : Flow<Resource<MoviesAndTVShowsResponse>>
+    fun searchTVShows(tvShowName: String): Flow<Resource<MoviesAndTVShowsResponse>>
 
-    fun tvShowDetails(seriesId: String) : Flow<Resource<TVShowDetailsResponse>>
+    fun tvShowDetails(seriesId: String): Flow<Resource<TVShowDetailsResponse>>
 
-    fun movieDetails(movieId: String) : Flow<Resource<MovieDetailsResponse>>
+    fun movieDetails(movieId: String): Flow<Resource<MovieDetailsResponse>>
 
-    fun similarTVShow(seriesId: String) : Flow<Resource<MoviesAndTVShowsResponse>>
-
-    fun similarMovie(movieId: String) : Flow<Resource<MoviesAndTVShowsResponse>>
+    fun similarMovieOrTVShow(
+        movieOrTVShow: String,
+        movieOrSeriesId: String
+    ): Flow<Resource<MoviesAndTVShowsResponse>>
 
 }

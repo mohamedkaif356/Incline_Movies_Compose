@@ -68,8 +68,9 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.0-beta03")
 
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -85,5 +86,14 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("com.google.accompanist:accompanist-coil:0.10.0")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0-RC2")
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("org.mockito:mockito-core:5.8.0")
+    androidTestImplementation("org.mockito:mockito-android:3.12.4")
 
 }
