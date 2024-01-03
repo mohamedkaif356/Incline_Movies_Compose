@@ -136,6 +136,7 @@ fun MovieAndTVShowCard(
     modifier: Modifier = Modifier,
     viewModel: MoviesAndTVShowsListViewModel = hiltViewModel()
 ) {
+    val isSearching by remember { viewModel.isSearching }
     val isNetworkAvailable = viewModel.networkStatusLiveData.observeAsState()
     Box(
         contentAlignment = Center,
@@ -149,6 +150,10 @@ fun MovieAndTVShowCard(
                     && movieAndTVShow.mediaType.toString() != "") {
                     navController.navigate(
                         "movie_and_tv_show_details_screen/${movieAndTVShow.id}/${movieAndTVShow.mediaType}"
+                    )
+                } else if (isNetworkAvailable.value == true && isSearching) {
+                    navController.navigate(
+                        "movie_and_tv_show_details_screen/${movieAndTVShow.id}/tv"
                     )
                 }
             }
@@ -204,7 +209,7 @@ fun MovieAndTVShowCard(
                     )
                 }
             } else {
-                movieAndTVShow.name?.let {
+                movieAndTVShow.originalTitle?.let {
                     Text(
                         text = it,
                         fontSize = 32.sp,
