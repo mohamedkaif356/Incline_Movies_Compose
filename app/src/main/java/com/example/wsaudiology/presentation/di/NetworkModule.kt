@@ -1,10 +1,8 @@
 package com.example.wsaudiology.presentation.di
 
-import android.content.Context
 import com.example.wsaudiology.data.datasource.remote.AuthInterceptor
 import com.example.wsaudiology.data.datasource.remote.PropertyProvider
 import com.example.wsaudiology.data.datasource.remote.moviesandtvshows.MoviesAndTVShowAPI
-import com.example.wsaudiology.utils.NetworkStatusLiveData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,10 +41,5 @@ object NetworkModule {
     fun provideAuthApi(retrofit: Retrofit): MoviesAndTVShowAPI =
         retrofit.create(MoviesAndTVShowAPI::class.java)
 
-
-    @Provides
-    @Singleton
-    fun provideNetworkStateLiveData(context: Context): NetworkStatusLiveData =
-        NetworkStatusLiveData(context)
 
 }

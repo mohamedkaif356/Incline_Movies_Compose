@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -78,6 +79,10 @@ fun MovieAndTVShowDetailsScreen(
         movieDetails.vote_count
     }
 
+    LaunchedEffect(key1 = movieOrTvShowId, key2 = movieOrTvShow) {
+        viewModel.movieOrTVShowDetails(movieOrTvShow, movieOrTvShowId)
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
@@ -85,9 +90,6 @@ fun MovieAndTVShowDetailsScreen(
         if (isLoading) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         } else {
-            if (similarMoviesAndTVShows.isEmpty()) {
-                viewModel.movieOrTVShowDetails(movieOrTvShow, movieOrTvShowId)
-            }
             Column(
                 modifier = Modifier
                     .background(Color.Black)
@@ -140,32 +142,32 @@ fun MovieAndTVShowDetailsScreen(
                     text = title ?: "",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.W600,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Start,
                     color = Color.White,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(6.dp)
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
                 )
                 Text(
                     text = "Rating: $voteAverage \nVote Count: $voteCount",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W400,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Start,
                     color = Color.White,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(6.dp)
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
                 )
                 if (movieOrTvShow == "tv") {
                     Text(
                         text = "Seasons:",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W400,
-                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W600,
+                        textAlign = TextAlign.Start,
                         color = Color.White,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(6.dp)
+                            .padding(horizontal = 16.dp, vertical = 6.dp)
                     )
                     LazyRow(contentPadding = PaddingValues(6.dp)) {
                         items(tvShowDetails.seasons!!) {
@@ -173,6 +175,16 @@ fun MovieAndTVShowDetailsScreen(
                         }
                     }
                 }
+                Text(
+                    text = "Similar:",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W600,
+                    textAlign = TextAlign.Start,
+                    color = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 6.dp)
+                )
                 LazyRow(contentPadding = PaddingValues(6.dp)) {
                     items(similarMoviesAndTVShows) {
                         ShowSimilarMoviesOrTVShows(it, navController)

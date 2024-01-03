@@ -2,15 +2,14 @@ package com.example.wsaudiology.presentation.viewmodel
 
 import android.content.Context
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.wsaudiology.domain.model.moviesandtvshows.MoviesAndTVShowsResult
 import com.example.wsaudiology.domain.usecase.MoviesAndTVShowsUseCase
 import com.example.wsaudiology.utils.NetworkStatusLiveData
 import com.example.wsaudiology.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +19,7 @@ class MoviesAndTVShowsListViewModel @Inject constructor(
     context: Context
 ) : ViewModel() {
 
-    private val networkStatusLiveData = NetworkStatusLiveData(context).asFlow()
+    private val _networkStatusLiveData = NetworkStatusLiveData(context)
 
 
     val moviesAndTVShowList = mutableStateOf<List<MoviesAndTVShowsResult>>(listOf())
@@ -28,17 +27,12 @@ class MoviesAndTVShowsListViewModel @Inject constructor(
     var isLoading = mutableStateOf(false)
     var isSearching = mutableStateOf(false)
 
-    var liveNetworkState = mutableStateOf(true)
-    init {
-        viewModelScope.launch {
-            networkStatusLiveData.map  {
-                liveNetworkState.value = it
-            }
-        }
-        moviesAndTVShowList(liveNetworkState.value)
-    }
+    val networkStatusLiveData: LiveData<Boolean>
+        get() = _networkStatusLiveData
     fun moviesAndTVShowList(isNetworkAvailable: Boolean) = viewModelScope.launch{
         isLoading.value = true
+        loadError.value = ""
+        moviesAndTVShowList.value = listOf()
         moviesAndTVShowsUseCase.invoke(isNetworkAvailable).collect { list ->
             when(list) {
                 is Resource.Success -> {
@@ -47,7 +41,7 @@ class MoviesAndTVShowsListViewModel @Inject constructor(
                     if (!list.data.isNullOrEmpty()) {
                         moviesAndTVShowList.value = list.data
                     } else {
-                        loadError.value = "No Data Available"
+                        loadError.value = "No Data Available locally"
                     }
                 }
                 is Resource.Error -> {
@@ -65,7 +59,7 @@ class MoviesAndTVShowsListViewModel @Inject constructor(
         isLoading.value = true
         isSearching.value = true
         if (tvShowName == "") {
-            moviesAndTVShowList(liveNetworkState.value)
+            networkStatusLiveData.value?.let { moviesAndTVShowList(it) }
         } else {
             moviesAndTVShowsUseCase.invoke(tvShowName).collect { list ->
                 when(list) {
@@ -76,6 +70,7 @@ class MoviesAndTVShowsListViewModel @Inject constructor(
                             moviesAndTVShowList.value = list.data?.results!!
                         } else {
                             loadError.value = "No Data Available"
+                            moviesAndTVShowList.value = listOf()
                         }
                     }
                     is Resource.Error -> {

@@ -24,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -54,7 +55,7 @@ fun MoviesAndTVShowsDetails(
     navController: NavController,
     viewModel: MoviesAndTVShowsListViewModel = hiltViewModel()
 ) {
-    val isNetworkAvailable by remember { viewModel.liveNetworkState }
+    val isNetworkAvailable = viewModel.networkStatusLiveData.observeAsState()
     Column {
         Row {
             Surface(
@@ -69,15 +70,18 @@ fun MoviesAndTVShowsDetails(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    if (isNetworkAvailable) {
+                    if (isNetworkAvailable.value == true) {
                         viewModel.searchTVShowList(it)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
-        if (!isNetworkAvailable) {
+        if (isNetworkAvailable.value == false) {
             ShowToast(message = "Please make sure you have Internet connection to search your favorite TV Show and check out it's details")
+            viewModel.moviesAndTVShowList(isNetworkAvailable.value!!)
+        } else {
+            isNetworkAvailable.value?.let { viewModel.moviesAndTVShowList(it) }
         }
         Row {
             Surface(
@@ -96,7 +100,7 @@ fun MoviesAndTVShowsList(
     navController: NavController,
     viewModel: MoviesAndTVShowsListViewModel = hiltViewModel()
 ) {
-    val isNetworkAvailable by remember { viewModel.liveNetworkState }
+    val isNetworkAvailable = viewModel.networkStatusLiveData.observeAsState()
     val moviesAndTVShowsList by remember { viewModel.moviesAndTVShowList }
     val loadError by remember { viewModel.loadError }
     val isLoading by remember { viewModel.isLoading }
@@ -105,7 +109,7 @@ fun MoviesAndTVShowsList(
     LazyColumn(contentPadding = PaddingValues(6.dp)) {
         items(moviesAndTVShowsList) {
             if (!isSearching && !isLoading && moviesAndTVShowsList.isEmpty()) {
-                viewModel.moviesAndTVShowList(isNetworkAvailable)
+                isNetworkAvailable.value?.let { it1 -> viewModel.moviesAndTVShowList(it1) }
             }
             MovieAndTVShowCard(movieAndTVShow = it, navController = navController)
         }
@@ -119,7 +123,7 @@ fun MoviesAndTVShowsList(
         }
         if (loadError.isNotEmpty()) {
             RetrySection(error = loadError) {
-                viewModel.moviesAndTVShowList(isNetworkAvailable)
+                isNetworkAvailable.value?.let { viewModel.moviesAndTVShowList(it) }
             }
         }
     }
@@ -132,7 +136,7 @@ fun MovieAndTVShowCard(
     modifier: Modifier = Modifier,
     viewModel: MoviesAndTVShowsListViewModel = hiltViewModel()
 ) {
-    val isNetworkAvailable by remember { viewModel.liveNetworkState }
+    val isNetworkAvailable = viewModel.networkStatusLiveData.observeAsState()
     Box(
         contentAlignment = Center,
         modifier = modifier
@@ -140,7 +144,7 @@ fun MovieAndTVShowCard(
             .clip(RoundedCornerShape(10.dp))
             .aspectRatio(0.75f)
             .clickable {
-                if (isNetworkAvailable) {
+                if (isNetworkAvailable.value == true) {
                     navController.navigate(
                         "movie_and_tv_show_details_screen/${movieAndTVShow.id}/${movieAndTVShow.mediaType}"
                     )
@@ -198,7 +202,7 @@ fun MovieAndTVShowCard(
                     )
                 }
             } else {
-                movieAndTVShow.originalTitle?.let {
+                movieAndTVShow.name?.let {
                     Text(
                         text = it,
                         fontSize = 32.sp,
