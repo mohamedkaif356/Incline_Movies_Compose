@@ -1,7 +1,9 @@
 package com.example.wsaudiology.presentation.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wsaudiology.domain.model.moviedetails.MovieDetailsResponse
@@ -10,6 +12,7 @@ import com.example.wsaudiology.domain.model.tvshowdetails.TVShowDetailsResponse
 import com.example.wsaudiology.domain.usecase.MovieDetailsUseCase
 import com.example.wsaudiology.domain.usecase.SimilarMovieOrTVShowUseCase
 import com.example.wsaudiology.domain.usecase.TVShowDetailsUseCase
+import com.example.wsaudiology.utils.NetworkStatusLiveData
 import com.example.wsaudiology.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +23,13 @@ class MovieAndTVShowDetailsViewModel @Inject constructor(
     private val movieDetailsUseCase: MovieDetailsUseCase,
     private val tvShowDetailsUseCase: TVShowDetailsUseCase,
     private val similarMovieOrTVShowUseCase: SimilarMovieOrTVShowUseCase,
+    context: Context
 ) : ViewModel() {
+
+    private val _networkStatusLiveData = NetworkStatusLiveData(context)
+
+    val networkStatusLiveData: LiveData<Boolean>
+        get() = _networkStatusLiveData
 
     val similarMoviesAndTVShowList = mutableStateOf<List<MoviesAndTVShowsResult>>(listOf())
     val movieDetails = mutableStateOf(MovieDetailsResponse())

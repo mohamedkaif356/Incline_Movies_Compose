@@ -144,7 +144,9 @@ fun MovieAndTVShowCard(
             .clip(RoundedCornerShape(10.dp))
             .aspectRatio(0.75f)
             .clickable {
-                if (isNetworkAvailable.value == true) {
+                if (isNetworkAvailable.value == true
+                    && movieAndTVShow.id.toString() != ""
+                    && movieAndTVShow.mediaType.toString() != "") {
                     navController.navigate(
                         "movie_and_tv_show_details_screen/${movieAndTVShow.id}/${movieAndTVShow.mediaType}"
                     )

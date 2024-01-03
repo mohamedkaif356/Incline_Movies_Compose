@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -262,17 +263,26 @@ fun ShowSeasons(season: Season?) {
 }
 
 @Composable
-fun ShowSimilarMoviesOrTVShows(movieAndTVShow: MoviesAndTVShowsResult, navController: NavController) {
+fun ShowSimilarMoviesOrTVShows(
+    movieAndTVShow: MoviesAndTVShowsResult,
+    navController: NavController,
+    viewModel: MovieAndTVShowDetailsViewModel = hiltViewModel()) {
+    val isNetworkAvailable = viewModel.networkStatusLiveData.observeAsState()
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
             .height(300.dp)
-            .width(150.dp).clickable {
-                navController.navigate(
-                    "movie_and_tv_show_details_screen/${movieAndTVShow.id}/${movieAndTVShow.mediaType}"
-                )
+            .width(150.dp)
+            .clickable {
+                if (isNetworkAvailable.value == true
+                        && movieAndTVShow.id.toString() != ""
+                        && movieAndTVShow.mediaType.toString() != "") {
+                    navController.navigate(
+                        "movie_and_tv_show_details_screen/${movieAndTVShow.id}/${movieAndTVShow.mediaType}"
+                    )
+                }
             }
     ) {
         val painter: Painter =
