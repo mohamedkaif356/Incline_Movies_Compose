@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WSAudiology"
+rootProject.name = "Incline Movies Compose"
 include(":app")
  

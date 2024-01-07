@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.wsaudiology"
+    namespace = "com.example.inclinemoviescompose"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.wsaudiology"
+        applicationId = "com.example.inclinemoviescompose"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
